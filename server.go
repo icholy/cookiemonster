@@ -57,6 +57,15 @@ func init() {
 	signingKey = key
 }
 
+func lookupApplication(name string) (*Application, bool) {
+	for _, app := range applications {
+		if app.Name == name {
+			return app, true
+		}
+	}
+	return nil, false
+}
+
 // JWT converts the user to a JSON Web Token
 func (u *User) JWT() (string, error) {
 	token := jwt.New(jwt.SigningMethodRS256)
@@ -72,15 +81,6 @@ func (u *User) JWT() (string, error) {
 func Authenticate(username string, password string) (*User, error) {
 	user := &User{0, "Ilia Choly", []string{"dev", "admin"}}
 	return user, nil
-}
-
-func lookupApplication(name string) (*Application, bool) {
-	for _, app := range applications {
-		if app.Name == name {
-			return app, true
-		}
-	}
-	return nil, false
 }
 
 func main() {
