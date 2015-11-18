@@ -44,8 +44,8 @@ After the login page, the user is redirected to a page containing `img` tags poi
     <h1>Login Successfull</h1>
     
     <!-- set cookies on other domains -->
-    <img src="sub1.domain.com/wafer_hook.php?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsIm5hbWUiOiJJbGlhIENob2x5IiwiZ3JvdXBzIjpbImFkbWluIiwiZGV2Il19.JbD8pOZbBz5GOkfLakAisWvM-V9WMlWO4EUt3z8FEd0" />
-    <img src="sub2.domain.com:8888/wafer_hook/?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsIm5hbWUiOiJJbGlhIENob2x5IiwiZ3JvdXBzIjpbImFkbWluIiwiZGV2Il19.JbD8pOZbBz5GOkfLakAisWvM-V9WMlWO4EUt3z8FEd0" />
+    <img src="sub1.domain.com/wafer_webhook.php?jwt=xxxxx.yyyyy.zzzzz" />
+    <img src="sub2.domain.com:8888/wafer_webhook/?jwt=xxxxx.yyyyy.zzzzz" />
   </body>
 </html>
 ```
