@@ -31,6 +31,7 @@ sub2.domain.com:8888/cookiecutter/?jwt={{jwt}}
 ## Login page:
 
 After the login page, the user is redirected to a page containing `img` tags pointing to the configured domains.
+The cookiecutter has to purposes. It provisions user data in applications and it sets the JWT cookie.
 
 ``` html
 <html>
@@ -43,3 +44,10 @@ After the login page, the user is redirected to a page containing `img` tags poi
   </body>
 </html>
 ```
+
+## Application Integration
+
+1. The JWT is used to identify which user is logged in.
+2. If there is no JWT, the application redirects to the `cookiemonster` server.
+3. After login, the `cookiemonster` server invokes the application's `/cookiecutter` route.
+4. The user is then redirected back to the application.
