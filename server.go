@@ -61,6 +61,7 @@ func main() {
 			return
 		}
 
+		// generate JSON web token
 		token, err := user.JWT()
 		if err != nil {
 			http.Error(w, http.StatusText(400), 400)
