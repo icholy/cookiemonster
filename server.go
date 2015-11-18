@@ -43,6 +43,13 @@ func Authenticate(username string, password string) (*User, error) {
 func main() {
 
 	http.HandleFunc("/api/login", func(w http.ResponseWriter, r *http.Request) {
+
+		// only accept POST requests
+		if r.Method != "POST" {
+			http.Error(w, http.StatusText(404), 404)
+			return
+		}
+
 		// authenticate
 		var (
 			username = r.PostFormValue("username")
