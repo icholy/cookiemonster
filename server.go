@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/rsa"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -57,7 +56,7 @@ func Authenticate(username string, password string) (*User, error) {
 
 func main() {
 
-	tmpl := template.Must(template.ParseFiles("login.html.tmpl"))
+	tmpl := template.Must(template.ParseGlob("*.tmpl"))
 
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 
@@ -101,7 +100,17 @@ func main() {
 			return
 		}
 
-		fmt.Fprint(w, token)
+		if err := tmpl.ExecuteTemplate(w, "postlogin.html.tmpl", struct {
+			JWT      string
+			WebHooks []string
+		}{
+			JWT:      token,
+			WebHooks: WebHooks,
+		}); err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+
 	})
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {

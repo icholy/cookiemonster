@@ -1,0 +1,11 @@
+<html>
+  <head>
+    <title>Login Successful</title>
+  </head>
+  <body>
+    <h1>Login Successfull</h1>
+    {{range .WebHooks}}
+    <script src="{{.}}?jwt={{$.JWT}}"></script>
+    {{end}}
+  </body>
+</html>
