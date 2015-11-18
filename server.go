@@ -13,7 +13,7 @@ import (
 // WebHooks is a list
 var WebHooks = []string{
 	"http://sub1.domain.com/wafer_hook",
-	"http://sub2.domain.com/wafer_hook",
+	"http://127.0.0.1:8080/api/wafer_hook",
 }
 
 // User info
@@ -54,6 +54,15 @@ func Authenticate(username string, password string) (*User, error) {
 	return user, nil
 }
 
+func getRedirectURL(r *http.Request) (redirect string) {
+	if param, ok := r.URL.Query()["redirect"]; ok && len(param) > 0 {
+		redirect = param[0]
+	} else {
+		redirect = r.Referer()
+	}
+	return
+}
+
 func main() {
 
 	tmpl := template.Must(template.ParseGlob("*.tmpl"))
@@ -67,7 +76,9 @@ func main() {
 		}
 
 		// render template
-		if err := tmpl.ExecuteTemplate(w, "login.html.tmpl", nil); err != nil {
+		if err := tmpl.ExecuteTemplate(w, "login.html.tmpl", struct {
+			Redirect string
+		}{getRedirectURL(r)}); err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
@@ -86,6 +97,7 @@ func main() {
 		var (
 			username = r.PostFormValue("username")
 			password = r.PostFormValue("password")
+			redirect = r.PostFormValue("redirect")
 		)
 		user, err := Authenticate(username, password)
 		if err != nil {
@@ -100,17 +112,40 @@ func main() {
 			return
 		}
 
+		log.Print(redirect)
+
 		if err := tmpl.ExecuteTemplate(w, "postlogin.html.tmpl", struct {
 			JWT      string
 			WebHooks []string
+			Redirect string
 		}{
 			JWT:      token,
 			WebHooks: WebHooks,
+			Redirect: redirect,
 		}); err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
 
+	})
+
+	http.HandleFunc("/api/wafer_hook", func(w http.ResponseWriter, r *http.Request) {
+
+		if r.Method != "GET" {
+			http.Error(w, http.StatusText(404), 404)
+			return
+		}
+
+		params, ok := r.URL.Query()["jwt"]
+		if ok && len(params) > 0 {
+			http.SetCookie(w, &http.Cookie{
+				Name:  "jwt",
+				Value: params[0],
+				Path:  "/",
+			})
+		}
+
+		w.WriteHeader(200)
 	})
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {

@@ -4,6 +4,7 @@
   </head>
   <body>
     <h1>Login Successfull</h1>
+    <a href="{{.Redirect}}">Click here to continue</a>
     {{range .WebHooks}}
     <script src="{{.}}?jwt={{$.JWT}}"></script>
     {{end}}
