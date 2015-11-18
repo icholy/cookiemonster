@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 
@@ -41,6 +42,24 @@ func Authenticate(username string, password string) (*User, error) {
 }
 
 func main() {
+
+	tmpl := template.Must(template.ParseFiles("login.html.tmpl"))
+
+	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+
+		// only accept GET requests
+		if r.Method != "GET" {
+			http.Error(w, http.StatusText(404), 404)
+			return
+		}
+
+		// render template
+		if err := tmpl.ExecuteTemplate(w, "login.html", nil); err != nil {
+			http.Error(w, http.StatusText(500), 500)
+			return
+		}
+
+	})
 
 	http.HandleFunc("/api/login", func(w http.ResponseWriter, r *http.Request) {
 
