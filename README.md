@@ -1,6 +1,6 @@
 # WIP: Wafer
 
-> A simple approach to single-sign-on
+> A barebones approach to single-sign-on
 
 * Uses LDAP for storing users and passwords.
 * Provides login and logout page.
