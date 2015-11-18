@@ -2,19 +2,25 @@ package main
 
 import (
 	"crypto/rsa"
+	"encoding/json"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-// WebHooks is a list
-var WebHooks = []string{
-	"http://sub1.domain.com/wafer_hook",
-	"http://127.0.0.1:8080/api/wafer_hook",
+// Application configuration
+type Application struct {
+	Name        string `json:"name"`
+	RedirectURL string `json:"redirect_url"`
+	WebHookURL  string `json:"webhook_url"`
 }
+
+// Applications configuration
+type Applications []*Application
 
 // User info
 type User struct {
@@ -23,9 +29,23 @@ type User struct {
 	Groups []string `json:"groups"`
 }
 
-var signingKey *rsa.PrivateKey
+var (
+	signingKey   *rsa.PrivateKey
+	applications Applications
+)
 
 func init() {
+
+	// read config file
+	f, err := os.Open("applications.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := json.NewDecoder(f).Decode(&applications); err != nil {
+		log.Fatal(err)
+	}
+
+	// read key file
 	data, err := ioutil.ReadFile("privkey.pem")
 	if err != nil {
 		log.Fatal(err)
@@ -54,13 +74,13 @@ func Authenticate(username string, password string) (*User, error) {
 	return user, nil
 }
 
-func getRedirectURL(r *http.Request) (redirect string) {
-	if param, ok := r.URL.Query()["redirect"]; ok && len(param) > 0 {
-		redirect = param[0]
-	} else {
-		redirect = r.Referer()
+func lookupApplication(name string) (*Application, bool) {
+	for _, app := range applications {
+		if app.Name == name {
+			return app, true
+		}
 	}
-	return
+	return nil, false
 }
 
 func main() {
@@ -75,10 +95,21 @@ func main() {
 			return
 		}
 
+		var redirect string
+		if params, ok := r.URL.Query()["redirect"]; ok {
+			redirect = params[0]
+		}
+
+		var appname string
+		if params, ok := r.URL.Query()["appname"]; ok {
+			appname = params[0]
+		}
+
 		// render template
 		if err := tmpl.ExecuteTemplate(w, "login.html.tmpl", struct {
 			Redirect string
-		}{getRedirectURL(r)}); err != nil {
+			AppName  string
+		}{redirect, appname}); err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
@@ -98,6 +129,7 @@ func main() {
 			username = r.PostFormValue("username")
 			password = r.PostFormValue("password")
 			redirect = r.PostFormValue("redirect")
+			appname  = r.PostFormValue("appname")
 		)
 		user, err := Authenticate(username, password)
 		if err != nil {
@@ -112,7 +144,21 @@ func main() {
 			return
 		}
 
-		log.Print(redirect)
+		var hooks []string
+		app, ok := lookupApplication(appname)
+
+		if ok {
+			// If an application is specified, only invoke its hook
+			if redirect == "" {
+				redirect = app.RedirectURL
+			}
+			hooks = []string{app.WebHookURL}
+		} else {
+			// if no application is specified, invoke all the hooks
+			for _, app := range applications {
+				hooks = append(hooks, app.WebHookURL)
+			}
+		}
 
 		if err := tmpl.ExecuteTemplate(w, "postlogin.html.tmpl", struct {
 			JWT      string
@@ -120,7 +166,7 @@ func main() {
 			Redirect string
 		}{
 			JWT:      token,
-			WebHooks: WebHooks,
+			WebHooks: hooks,
 			Redirect: redirect,
 		}); err != nil {
 			http.Error(w, err.Error(), 500)
