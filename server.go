@@ -22,6 +22,7 @@ type Application struct {
 // Applications configuration
 type Applications []*Application
 
+// Lookup Applications by name
 func (a Applications) Lookup(name string) (*Application, bool) {
 	for _, app := range applications {
 		if app.Name == name {
@@ -29,6 +30,14 @@ func (a Applications) Lookup(name string) (*Application, bool) {
 		}
 	}
 	return nil, false
+}
+
+// WebHooks gets all the hook urls
+func (a Applications) WebHooks() (hooks []string) {
+	for _, app := range a {
+		hooks = append(hooks, app.WebHookURL)
+	}
+	return
 }
 
 // User info
@@ -95,15 +104,10 @@ func main() {
 			return
 		}
 
-		var redirect string
-		if params, ok := r.URL.Query()["redirect"]; ok {
-			redirect = params[0]
-		}
-
-		var appname string
-		if params, ok := r.URL.Query()["appname"]; ok {
-			appname = params[0]
-		}
+		var (
+			redirect = r.URL.Query().Get("redirect")
+			appname  = r.URL.Query().Get("appname")
+		)
 
 		// render template
 		data := struct {
@@ -155,9 +159,7 @@ func main() {
 			hooks = []string{app.WebHookURL}
 		} else {
 			// if no application is specified, invoke all the hooks
-			for _, app := range applications {
-				hooks = append(hooks, app.WebHookURL)
-			}
+			hooks = applications.WebHooks()
 		}
 
 		data := struct {
@@ -180,13 +182,11 @@ func main() {
 			return
 		}
 
-		if params, ok := r.URL.Query()["jwt"]; ok {
-			http.SetCookie(w, &http.Cookie{
-				Name:  "jwt",
-				Value: params[0],
-				Path:  "/",
-			})
-		}
+		http.SetCookie(w, &http.Cookie{
+			Name:  "jwt",
+			Value: r.URL.Query().Get("jwt"),
+			Path:  "/",
+		})
 
 		w.WriteHeader(200)
 	})
