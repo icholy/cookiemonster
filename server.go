@@ -22,6 +22,15 @@ type Application struct {
 // Applications configuration
 type Applications []*Application
 
+func (a Applications) Lookup(name string) (*Application, bool) {
+	for _, app := range applications {
+		if app.Name == name {
+			return app, true
+		}
+	}
+	return nil, false
+}
+
 // User info
 type User struct {
 	ID     int64    `json:"id"`
@@ -55,15 +64,6 @@ func init() {
 		log.Fatal(err)
 	}
 	signingKey = key
-}
-
-func lookupApplication(name string) (*Application, bool) {
-	for _, app := range applications {
-		if app.Name == name {
-			return app, true
-		}
-	}
-	return nil, false
 }
 
 // JWT converts the user to a JSON Web Token
@@ -106,10 +106,12 @@ func main() {
 		}
 
 		// render template
-		if err := tmpl.ExecuteTemplate(w, "login.html.tmpl", struct {
+		data := struct {
 			Redirect string
 			AppName  string
-		}{redirect, appname}); err != nil {
+		}{redirect, appname}
+
+		if err := tmpl.ExecuteTemplate(w, "login.html.tmpl", data); err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
@@ -145,9 +147,7 @@ func main() {
 		}
 
 		var hooks []string
-		app, ok := lookupApplication(appname)
-
-		if ok {
+		if app, ok := applications.Lookup(appname); ok {
 			// If an application is specified, only invoke its hook
 			if redirect == "" {
 				redirect = app.RedirectURL
@@ -160,15 +160,13 @@ func main() {
 			}
 		}
 
-		if err := tmpl.ExecuteTemplate(w, "postlogin.html.tmpl", struct {
+		data := struct {
 			JWT      string
 			WebHooks []string
 			Redirect string
-		}{
-			JWT:      token,
-			WebHooks: hooks,
-			Redirect: redirect,
-		}); err != nil {
+		}{token, hooks, redirect}
+
+		if err := tmpl.ExecuteTemplate(w, "postlogin.html.tmpl", &data); err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
