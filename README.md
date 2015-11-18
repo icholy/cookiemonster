@@ -34,10 +34,6 @@ Hooks have two responsibilities:
 1. Set the provided JWT in the cookie so it's available on that domain.
 2. Provision a user account for the user in the JWT if it does not already exist.
 
-## Endpoints
-
-Wafter endpoints are web
-
 ## Login page:
 
 After the login page, the user is redirected to a page containing `img` tags pointing to the configured domains. It provisions user data in applications and it sets the JWT cookie.
