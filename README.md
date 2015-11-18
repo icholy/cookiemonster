@@ -1,4 +1,4 @@
-# cookiemonster
+# WIP: Cookie Monster
 
 > A simple approach to single-sign-on
 
