@@ -25,8 +25,8 @@ These are invoked every time a user logs in via wafer.
 
 Example config file (for the wafer server):
 ```
-sub1.domain.com/wafer_webhook.php?jwt={{jwt}}
-sub2.domain.com:8888/wafer_webhook/?jwt={{jwt}}
+http://sub1.domain.com/wafer_webhook.php?jwt={{jwt}}
+https://sub2.domain.com:8888/wafer_webhook/?jwt={{jwt}}
 ```
 
 Hooks have two responsibilities:
@@ -44,8 +44,8 @@ After the login page, the user is redirected to a page containing `img` tags poi
     <h1>Login Successfull</h1>
     
     <!-- set cookies on other domains -->
-    <img src="sub1.domain.com/wafer_webhook.php?jwt=xxxxx.yyyyy.zzzzz" />
-    <img src="sub2.domain.com:8888/wafer_webhook/?jwt=xxxxx.yyyyy.zzzzz" />
+    <img src="http://sub1.domain.com/wafer_webhook.php?jwt=xxxxx.yyyyy.zzzzz" />
+    <img src="https://sub2.domain.com:8888/wafer_webhook/?jwt=xxxxx.yyyyy.zzzzz" />
   </body>
 </html>
 ```
