@@ -3,7 +3,7 @@
 > A simple approach to single-sign-on
 
 * Uses LDAP for storing users and passwords.
-* Provices login and logout page.
+* Provides login and logout page.
 * Sets a JWT on all specified domain.
 
 ## JWT Data:
