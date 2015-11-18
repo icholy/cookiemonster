@@ -18,9 +18,9 @@ This is data that will be accessible to all applications via headers.
 }
 ```
 
-## Hooks:
+## WebHooks:
 
-Each application can be configured with a wafte webhook.
+Each application can be configured with a wafer webhook.
 These are invoked every time a user logs in via wafer.
 
 Example config file (for the wafer server):
