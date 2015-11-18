@@ -94,7 +94,7 @@ func Authenticate(username string, password string) (*User, error) {
 
 func main() {
 
-	tmpl := template.Must(template.ParseGlob("*.tmpl"))
+	tmpl := template.Must(template.ParseGlob("templates/*.tmpl"))
 
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 
@@ -115,7 +115,7 @@ func main() {
 			AppName  string
 		}{redirect, appname}
 
-		if err := tmpl.ExecuteTemplate(w, "login.html.tmpl", data); err != nil {
+		if err := tmpl.ExecuteTemplate(w, "login.html.tmpl", &data); err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
