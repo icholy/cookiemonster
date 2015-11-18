@@ -1,15 +1,15 @@
 package main
 
 import (
+	"crypto/rsa"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
 )
-
-const signingKey = "secret"
 
 // WebHooks is a list
 var WebHooks = []string{
@@ -22,6 +22,20 @@ type User struct {
 	ID     int64    `json:"id"`
 	Name   string   `json:"name"`
 	Groups []string `json:"groups"`
+}
+
+var signingKey *rsa.PrivateKey
+
+func init() {
+	data, err := ioutil.ReadFile("jwt_rsa_key")
+	if err != nil {
+		log.Fatal(err)
+	}
+	key, err := jwt.ParseRSAPrivateKeyFromPEM(data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	signingKey = key
 }
 
 // JWT converts the user to a JSON Web Token
@@ -54,8 +68,8 @@ func main() {
 		}
 
 		// render template
-		if err := tmpl.ExecuteTemplate(w, "login.html", nil); err != nil {
-			http.Error(w, http.StatusText(500), 500)
+		if err := tmpl.ExecuteTemplate(w, "login.html.tmpl", nil); err != nil {
+			http.Error(w, err.Error(), 500)
 			return
 		}
 
@@ -76,14 +90,14 @@ func main() {
 		)
 		user, err := Authenticate(username, password)
 		if err != nil {
-			http.Error(w, http.StatusText(401), 401)
+			http.Error(w, err.Error(), 401)
 			return
 		}
 
 		// generate JSON web token
 		token, err := user.JWT()
 		if err != nil {
-			http.Error(w, http.StatusText(400), 400)
+			http.Error(w, err.Error(), 400)
 			return
 		}
 
