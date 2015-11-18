@@ -136,8 +136,7 @@ func main() {
 			return
 		}
 
-		params, ok := r.URL.Query()["jwt"]
-		if ok && len(params) > 0 {
+		if params, ok := r.URL.Query()["jwt"]; ok {
 			http.SetCookie(w, &http.Cookie{
 				Name:  "jwt",
 				Value: params[0],
