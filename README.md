@@ -26,7 +26,7 @@ These are invoked when a user logs in via wafer.
 Example config file (for the wafer server):
 ```
 http://sub1.domain.com/wafer_webhook.php
-https://sub2.domain.com:8888/wafer_webhook
+https://sub2.domain.com:8888/wafer_webhook/
 ```
 
 Hooks have two responsibilities:
