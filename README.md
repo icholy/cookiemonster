@@ -57,7 +57,6 @@ I'll need to write an apache module which authenticates against JWT. Example:
 
 ``` apache
 <Directory "/www/dev">
-  AuthUserFile /etc/apache_users
   AuthName "dev group members"
   AuthCookieMonsterServer http://cookiemonster.domain.com/
   AuthType CookieMonster
