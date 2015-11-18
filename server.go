@@ -27,7 +27,7 @@ type User struct {
 var signingKey *rsa.PrivateKey
 
 func init() {
-	data, err := ioutil.ReadFile("jwt_rsa_key")
+	data, err := ioutil.ReadFile("jwt_rsa_key.pem")
 	if err != nil {
 		log.Fatal(err)
 	}
