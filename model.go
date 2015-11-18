@@ -17,6 +17,7 @@ type Applications []*Application
 type Config struct {
 	ListenAddr     string       `json:"listen_addr"`
 	PrivateKeyFile string       `json:"private_key_file"`
+	PublicKeyFile  string       `json:"public_key_file"`
 	Applications   Applications `json:"applicationds"`
 }
 

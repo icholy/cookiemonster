@@ -14,8 +14,9 @@ import (
 )
 
 var (
-	signingKey *rsa.PrivateKey
-	config     Config
+	signingKey      *rsa.PrivateKey
+	verificationKey *rsa.PublicKey
+	config          Config
 
 	configFile = flag.String("config", "config.json", "Configuration file")
 )
@@ -33,16 +34,25 @@ func init() {
 		log.Fatal(err)
 	}
 
-	// read key file
+	// read private key file
 	data, err := ioutil.ReadFile(config.PrivateKeyFile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	key, err := jwt.ParseRSAPrivateKeyFromPEM(data)
+	signingKey, err = jwt.ParseRSAPrivateKeyFromPEM(data)
 	if err != nil {
 		log.Fatal(err)
 	}
-	signingKey = key
+
+	// read private key file
+	data, err = ioutil.ReadFile(config.PrivateKeyFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	verificationKey, err = jwt.ParseRSAPublicKeyFromPEM(data)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // Authenticate a user
