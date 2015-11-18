@@ -21,7 +21,7 @@ This is data that will be accessible to all applications via headers.
 ## Domain Config File:
 
 Each domain must have a "cookiecutter" which sets cookies based on its GET parameters.
-This is a Golang template file where `{{jwt}}` gets replaced by the JWT.
+This is a template file where `{{jwt}}` gets replaced by the JWT.
 
 ```
 sub1.domain.com/cookiecutter.php?jwt={{jwt}}
