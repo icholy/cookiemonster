@@ -1,0 +1,14 @@
+{
+  "listen_addr": ":8080",
+  "private_key_file": "privkey.pem",
+  "applications": [
+    {
+      "name": "wafer",
+      "redirect_url": "http://www.google.com",
+      "webhook_url": "http://127.0.0.1:8080/api/wafer_hook"
+    }, {
+      "name": "test",
+      "webhook_url": "http://127.0.0.1:8080/api/wafer_hook"
+    }
+  ]
+}

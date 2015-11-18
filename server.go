@@ -22,9 +22,16 @@ type Application struct {
 // Applications configuration
 type Applications []*Application
 
+// Config is the configuration
+type Config struct {
+	ListenAddr     string       `json:"listen_addr"`
+	PrivateKeyFile string       `json:"private_key_file"`
+	Applications   Applications `json:"applicationds"`
+}
+
 // Lookup Applications by name
 func (a Applications) Lookup(name string) (*Application, bool) {
-	for _, app := range applications {
+	for _, app := range a {
 		if app.Name == name {
 			return app, true
 		}
@@ -48,23 +55,23 @@ type User struct {
 }
 
 var (
-	signingKey   *rsa.PrivateKey
-	applications Applications
+	signingKey *rsa.PrivateKey
+	config     Config
 )
 
 func init() {
 
 	// read config file
-	f, err := os.Open("applications.json")
+	f, err := os.Open("config.json")
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := json.NewDecoder(f).Decode(&applications); err != nil {
+	if err := json.NewDecoder(f).Decode(&config); err != nil {
 		log.Fatal(err)
 	}
 
 	// read key file
-	data, err := ioutil.ReadFile("privkey.pem")
+	data, err := ioutil.ReadFile(config.PrivateKeyFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -151,7 +158,7 @@ func main() {
 		}
 
 		var hooks []string
-		if app, ok := applications.Lookup(appname); ok {
+		if app, ok := config.Applications.Lookup(appname); ok {
 			// If an application is specified, only invoke its hook
 			if redirect == "" {
 				redirect = app.RedirectURL
@@ -159,7 +166,7 @@ func main() {
 			hooks = []string{app.WebHookURL}
 		} else {
 			// if no application is specified, invoke all the hooks
-			hooks = applications.WebHooks()
+			hooks = config.Applications.WebHooks()
 		}
 
 		data := struct {
@@ -191,7 +198,7 @@ func main() {
 		w.WriteHeader(200)
 	})
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(config.ListenAddr, nil); err != nil {
 		log.Fatal(err)
 	}
 }
