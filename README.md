@@ -1,4 +1,4 @@
-# WIP: Cookie Monster
+# WIP: Wafer
 
 > A simple approach to single-sign-on
 
@@ -20,12 +20,12 @@ This is data that will be accessible to all applications via headers.
 
 ## Domain Config File:
 
-Each domain must have a "cookiecutter" which sets cookies based on its GET parameters.
+Each domain must have an "wafer_notify" which sets cookies based on its GET parameters.
 This is a template file where `{{jwt}}` gets replaced by the JWT.
 
 ```
-sub1.domain.com/cookiecutter.php?jwt={{jwt}}
-sub2.domain.com:8888/cookiecutter/?jwt={{jwt}}
+sub1.domain.com/wafer_notify.php?jwt={{jwt}}
+sub2.domain.com:8888/wafer_notify/?jwt={{jwt}}
 ```
 
 ## Login page:
@@ -47,8 +47,8 @@ After the login page, the user is redirected to a page containing `img` tags poi
 ## Application Integration
 
 1. The JWT is used to identify which user is logged in.
-2. If there is no JWT, the application redirects to the `cookiemonster` server.
-3. After login, the `cookiemonster` server invokes the application's `/cookiecutter` route.
+2. If there is no JWT, the application redirects to the `wafer` server.
+3. After login, the `wafer` server invokes the application's `/water_notify` route.
 4. The user is then redirected back to the application.
 
 ## Apache Integration
@@ -58,8 +58,8 @@ I'll need to write an apache module which authenticates against JWT. Example:
 ``` apache
 <Directory "/www/dev">
   AuthName "dev group members"
-  AuthCookieMonsterServer http://cookiemonster.domain.com/
-  AuthType CookieMonster
+  AuthWaferServer http://wafer.domain.com/
+  AuthType Wafer
   Require group dev
 </Directory>
 ```
