@@ -2,8 +2,8 @@
 
 > A barebones approach to single-sign-on
 
-* Uses LDAP for storing users and passwords.
 * Provides login and logout page.
+* Uses LDAP for storing users and passwords.
 * Sets a [JWT](http://jwt.io/) on all specified domain.
 
 ## JWT Data:
