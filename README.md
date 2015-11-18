@@ -4,7 +4,7 @@
 
 * Uses LDAP for storing users and passwords.
 * Provides login and logout page.
-* Sets a JWT on all specified domain.
+* Sets a [JWT](http://jwt.io/) on all specified domain.
 
 ## JWT Data:
 
