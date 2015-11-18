@@ -45,7 +45,7 @@ It provisions user data in applications and it sets the JWT cookie.
   <body>
     <h1>Login Successfull</h1>
     <a href="{{ReferrerURL}}">Click here if you're not redirected</a>
-    
+
     <!-- set jwt on other domain -->
     <script src="{{WebHookURL}}?jwt={{JWT}}"></script>
   </body>
@@ -65,9 +65,11 @@ I'll need to write an apache module which authenticates against JWT. Example:
 
 ``` apache
 <Directory "/www/dev">
+  AuthType Wafer
   AuthName "dev group members"
   AuthWaferServer http://wafer.domain.com/
-  AuthType Wafer
+  AuthWaferRedirect http://apache.domain.com/myapp
+  AuthWaferAppName "MyApp"
   Require group dev
 </Directory>
 ```
