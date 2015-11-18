@@ -121,6 +121,10 @@ func main() {
 			appname  = r.URL.Query().Get("appname")
 		)
 
+		if redirect == "" {
+			redirect = r.Referer()
+		}
+
 		// render template
 		data := struct {
 			Redirect string
