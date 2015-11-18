@@ -21,12 +21,12 @@ This is data that will be accessible to all applications via headers.
 ## WebHooks:
 
 Each application can be configured with a wafer webhook.
-These are invoked every time a user logs in via wafer.
+These are invoked when a user logs in via wafer.
 
 Example config file (for the wafer server):
 ```
-http://sub1.domain.com/wafer_webhook.php?jwt={{jwt}}
-https://sub2.domain.com:8888/wafer_webhook/?jwt={{jwt}}
+http://sub1.domain.com/wafer_webhook.php
+https://sub2.domain.com:8888/wafer_webhook
 ```
 
 Hooks have two responsibilities:
@@ -36,16 +36,18 @@ Hooks have two responsibilities:
 
 ## Login page:
 
-After the login page, the user is redirected to a page containing `img` tags pointing to the configured domains. It provisions user data in applications and it sets the JWT cookie.
+After the login page, the user is redirected to a page containing `img` tags pointing to the configured domain.
+It provisions user data in applications and it sets the JWT cookie.
+
 
 ``` html
 <html>
   <body>
     <h1>Login Successfull</h1>
+    <a href="{{ReferrerURL}}">Click here if you're not redirected</a>
     
-    <!-- set cookies on other domains -->
-    <img src="http://sub1.domain.com/wafer_webhook.php?jwt=xxxxx.yyyyy.zzzzz" />
-    <img src="https://sub2.domain.com:8888/wafer_webhook/?jwt=xxxxx.yyyyy.zzzzz" />
+    <!-- set jwt on other domain -->
+    <img src="{{WebHookURL}}?jwt={{JWT}}" />
   </body>
 </html>
 ```
