@@ -66,10 +66,12 @@ I'll need to write an apache module which authenticates against JWT. Example:
 ``` apache
 <Directory "/www/dev">
   AuthType Wafer
-  AuthName "dev group members"
+  AuthName Dev_Group_Members
   AuthWaferServer http://wafer.domain.com/
   AuthWaferRedirect http://apache.domain.com/myapp
-  AuthWaferAppName "MyApp"
+  AuthWaferSigningMethod RS256
+  AuthWaferKeyFile pubkey.pem
+  AuthWaferAppName MyApp
   Require group dev
 </Directory>
 ```
