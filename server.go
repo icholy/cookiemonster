@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/rsa"
 	"encoding/json"
+	"flag"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -57,12 +58,16 @@ type User struct {
 var (
 	signingKey *rsa.PrivateKey
 	config     Config
+
+	configFile = flag.String("config", "config.json", "Configuration file")
 )
 
 func init() {
 
+	flag.Parse()
+
 	// read config file
-	f, err := os.Open("config.json")
+	f, err := os.Open(*configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -107,7 +112,7 @@ func main() {
 
 		// only accept GET requests
 		if r.Method != "GET" {
-			http.Error(w, http.StatusText(404), 404)
+			http.Error(w, http.StatusText(405), 405)
 			return
 		}
 
@@ -133,7 +138,7 @@ func main() {
 
 		// only accept POST requests
 		if r.Method != "POST" {
-			http.Error(w, http.StatusText(404), 404)
+			http.Error(w, http.StatusText(405), 405)
 			return
 		}
 
@@ -185,7 +190,7 @@ func main() {
 	http.HandleFunc("/api/wafer_hook", func(w http.ResponseWriter, r *http.Request) {
 
 		if r.Method != "GET" {
-			http.Error(w, http.StatusText(404), 404)
+			http.Error(w, http.StatusText(405), 405)
 			return
 		}
 
