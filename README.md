@@ -50,3 +50,17 @@ After the login page, the user is redirected to a page containing `img` tags poi
 2. If there is no JWT, the application redirects to the `cookiemonster` server.
 3. After login, the `cookiemonster` server invokes the application's `/cookiecutter` route.
 4. The user is then redirected back to the application.
+
+## Apache Integration
+
+I'll need to write an apache module which authenticates against JWT. Example:
+
+``` apache
+<Directory "/www/dev">
+  AuthUserFile /etc/apache_users
+  AuthName "dev group members"
+  AuthCookieMonsterServer http://cookiemonster.domain.com/
+  AuthType CookieMonster
+  Require group dev
+</Directory>
+```
