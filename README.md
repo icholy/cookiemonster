@@ -18,15 +18,21 @@ This is data that will be accessible to all applications via headers.
 }
 ```
 
-## Domain Config File:
+## Hooks:
 
-Each domain must have a wafter **hook** which sets cookies based on its GET parameters.
-This is a template file where `{{jwt}}` gets replaced by the JWT.
+Each application can be configured with a wafte webhook.
+These are invoked every time a user logs in via wafer.
 
+Example config file (for the wafer server):
 ```
-sub1.domain.com/wafer_hook.php?jwt={{jwt}}
-sub2.domain.com:8888/wafer_hook/?jwt={{jwt}}
+sub1.domain.com/wafer_webhook.php?jwt={{jwt}}
+sub2.domain.com:8888/wafer_webhook/?jwt={{jwt}}
 ```
+
+Hooks have two responsibilities:
+
+1. Set the provided JWT in the cookie so it's available on that domain.
+2. Provision a user account for the user in the JWT if it does not already exist.
 
 ## Endpoints
 
