@@ -4,9 +4,10 @@ import "github.com/dgrijalva/jwt-go"
 
 // Application configuration
 type Application struct {
-	Name        string `json:"name"`
-	RedirectURL string `json:"redirect_url"`
-	WebHookURL  string `json:"webhook_url"`
+	Name          string `json:"name"`
+	RedirectURL   string `json:"redirect_url"`
+	ForceRedirect bool   `json:"force_redirect"`
+	WebHookURL    string `json:"webhook_url"`
 }
 
 // Applications configuration

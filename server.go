@@ -97,8 +97,6 @@ func main() {
 		var (
 			username = r.PostFormValue("username")
 			password = r.PostFormValue("password")
-			redirect = r.PostFormValue("redirect")
-			appname  = r.PostFormValue("appname")
 		)
 		user, err := Authenticate(username, password)
 		if err != nil {
@@ -113,10 +111,16 @@ func main() {
 			return
 		}
 
-		var hooks []string
+		var (
+			redirect = r.PostFormValue("redirect")
+			appname  = r.PostFormValue("appname")
+
+			hooks []string
+		)
+
 		if app, ok := config.Applications.Lookup(appname); ok {
 			// If an application is specified, only invoke its hook
-			if redirect == "" {
+			if redirect == "" || app.ForceRedirect {
 				redirect = app.RedirectURL
 			}
 			hooks = []string{app.WebHookURL}
