@@ -27,7 +27,7 @@ type User struct {
 var signingKey *rsa.PrivateKey
 
 func init() {
-	data, err := ioutil.ReadFile("jwt_rsa_key.pem")
+	data, err := ioutil.ReadFile("privkey.pem")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,7 +40,7 @@ func init() {
 
 // JWT converts the user to a JSON Web Token
 func (u *User) JWT() (string, error) {
-	token := jwt.New(jwt.SigningMethodHS256)
+	token := jwt.New(jwt.SigningMethodRS256)
 	token.Claims = map[string]interface{}{
 		"id":     u.ID,
 		"name":   u.Name,
