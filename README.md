@@ -47,7 +47,7 @@ It provisions user data in applications and it sets the JWT cookie.
     <a href="{{ReferrerURL}}">Click here if you're not redirected</a>
     
     <!-- set jwt on other domain -->
-    <script src="{{WebHookURL}}?jwt={{JWT}}" />
+    <script src="{{WebHookURL}}?jwt={{JWT}}"></script>
   </body>
 </html>
 ```
