@@ -3,12 +3,9 @@
   "key": "secret",
   "applications": [
     {
-      "name": "wafer",
-      "redirect_url": "http://www.google.com",
-      "webhook_url": "http://127.0.0.1:8080/api/wafer_hook"
-    }, {
-      "name": "test",
-      "webhook_url": "http://127.0.0.1:8080/api/wafer_hook"
+      "name": "apache",
+      "redirect_url": "http://127.0.0.1/test",
+      "webhook_url": "http://127.0.0.1/wafer_hook.php"
     }
   ]
 }

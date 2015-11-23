@@ -17,7 +17,7 @@ type Applications []*Application
 type Config struct {
 	ListenAddr   string       `json:"listen_addr"`
 	Key          string       `json:"key"`
-	Applications Applications `json:"applicationds"`
+	Applications Applications `json:"applications"`
 }
 
 // Lookup Applications by name
