@@ -1,22 +1,17 @@
 package main
 
 import (
-	"crypto/rsa"
 	"encoding/json"
 	"flag"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 var (
-	signingKey      *rsa.PrivateKey
-	verificationKey *rsa.PublicKey
-	config          Config
+	signingKey []byte
+	config     Config
 
 	configFile = flag.String("config", "config.json", "Configuration file")
 )
@@ -34,25 +29,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-	// read private key file
-	data, err := ioutil.ReadFile(config.PrivateKeyFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	signingKey, err = jwt.ParseRSAPrivateKeyFromPEM(data)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// read private key file
-	data, err = ioutil.ReadFile(config.PrivateKeyFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	verificationKey, err = jwt.ParseRSAPublicKeyFromPEM(data)
-	if err != nil {
-		log.Fatal(err)
-	}
+	signingKey = []byte(config.Key)
 }
 
 // Authenticate a user

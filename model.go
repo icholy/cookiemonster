@@ -15,10 +15,9 @@ type Applications []*Application
 
 // Config is the configuration
 type Config struct {
-	ListenAddr     string       `json:"listen_addr"`
-	PrivateKeyFile string       `json:"private_key_file"`
-	PublicKeyFile  string       `json:"public_key_file"`
-	Applications   Applications `json:"applicationds"`
+	ListenAddr   string       `json:"listen_addr"`
+	Key          string       `json:"key"`
+	Applications Applications `json:"applicationds"`
 }
 
 // Lookup Applications by name
@@ -48,7 +47,7 @@ type User struct {
 
 // JWT converts the user to a JSON Web Token
 func (u *User) JWT() (string, error) {
-	token := jwt.New(jwt.SigningMethodRS256)
+	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = map[string]interface{}{
 		"id":     u.ID,
 		"name":   u.Name,

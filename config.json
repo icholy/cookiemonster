@@ -1,7 +1,6 @@
 {
   "listen_addr": ":8080",
-  "private_key_file": "privkey.pem",
-  "public_key_file": "pubkey.pem",
+  "key": "secret",
   "applications": [
     {
       "name": "wafer",
