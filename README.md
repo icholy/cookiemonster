@@ -65,13 +65,12 @@ I'll need to write an apache module which authenticates against JWT. Example:
 
 ``` apache
 <Directory "/www/dev">
-  AuthType Wafer
-  AuthName Dev_Group_Members
-  AuthWaferServer http://wafer.domain.com/
-  AuthWaferRedirect http://apache.domain.com/myapp
-  AuthWaferSigningMethod RS256
-  AuthWaferKeyFile pubkey.pem
-  AuthWaferAppName MyApp
-  Require group dev
+  AuthType JWT
+  AuthName "Members Only"
+  AuthJWTKey "secret"
+  Require user
+  ErrorDocument 401 http://wafer.server.com/login?appname=apache
 </Directory>
 ```
+
+WIP: https://github.com/icholy/mod_auth_jwt
